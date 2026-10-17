@@ -202,7 +202,7 @@ details.concepts summary{cursor:pointer; font-weight:600; padding:12px 0; color:
   padding:22px; background:#fff;
 }
 .slot-row{
-  display:grid; grid-template-columns:28px 1fr 130px 78px; gap:10px; align-items:center;
+  display:grid; grid-template-columns:28px minmax(180px,1fr) 92px 110px 128px 30px; gap:10px; align-items:center;
   padding:10px 8px; border-bottom:1px solid var(--border);
 }
 .slot-row:last-child{border-bottom:none;}
@@ -276,7 +276,7 @@ footer.credit strong{color:var(--ink-soft); font-weight:600;}
   .steps-nav{width:100%; justify-content:space-between;}
   .step-pill span.label{display:none;}
   .slot-row{grid-template-columns:22px 1fr; row-gap:8px;}
-  .slot-mult, .slot-status{grid-column:1 / -1; justify-self:start;}
+  .slot-val, .slot-mult, .slot-status{grid-column:2 / -1; justify-self:start;}
   .equation-row{font-size:1rem; padding:22px 12px;}
   .coef-input{width:56px; height:44px; font-size:0.92rem;}
 }
@@ -284,8 +284,7 @@ footer.credit strong{color:var(--ink-soft); font-weight:600;}
 @media (prefers-reduced-motion: reduce){
   *{transition:none !important;}
 }
-</style>
-<style>
+
 .notice{background:var(--accent-pale);border:1px solid #e7cfa0;border-radius:12px;padding:14px 16px;font-size:.88rem;color:#6d4c1d;margin-top:14px}
 .notice b{color:#5a3d12}
 .notice .sign-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;font-family:var(--font-mono);font-size:.82rem}
@@ -324,6 +323,29 @@ footer.credit strong{color:var(--ink-soft); font-weight:600;}
 .opt.bad{border-color:var(--danger);background:var(--danger-pale)}
 .data-note{font-size:.78rem;color:var(--ink-faint);margin-top:10px}
 @media (max-width:640px){.mob-hint{display:inline!important}.custom-row{grid-template-columns:1fr 90px}.custom-row .rad{grid-column:1/-1}.notice .sign-row{grid-template-columns:1fr}}
+.slot-val{font-family:var(--font-mono);font-size:.85rem;font-weight:600;color:var(--primary-dark);background:var(--primary-pale);border-radius:8px;padding:8px 6px;text-align:center}
+.slot-val.na{font-family:var(--font-body);font-weight:500;font-size:.7rem;color:var(--ink-faint);background:var(--surface-alt)}
+.prod-input{width:84px;padding:8px 6px;text-align:center;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-mono);font-size:.85rem}
+.data-panel{margin-top:14px;border:1px solid var(--border);border-radius:12px;padding:12px 14px;background:var(--surface-alt)}
+.dp-title{font-weight:700;font-size:.88rem;margin-bottom:8px}
+.dp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:6px 14px}
+.dp-item{display:flex;justify-content:space-between;gap:8px;font-size:.84rem;border-bottom:1px dashed var(--border);padding:3px 0}
+.dp-item b{font-family:var(--font-mono)}
+.timeline{margin:18px 0 6px}
+.tl-title{font-size:.82rem;color:var(--ink-soft);font-weight:600;margin-bottom:8px}
+.tl-row{display:flex;align-items:center;gap:10px 6px;flex-wrap:wrap}
+.tl-item{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:120px}
+.tl-eq{font-family:var(--font-mono);font-size:.7rem;color:var(--ink-soft);text-align:center;max-width:150px;min-height:2.4em;display:flex;align-items:flex-end;justify-content:center}
+.tl-box{border-radius:9px;padding:9px 10px;color:#fff;font-weight:700;font-size:.8rem;text-align:center;width:100%;box-sizing:border-box}
+.tl-box.endo{background:#B71C1C}.tl-box.exo{background:#1B5E20}.tl-box.unk{background:var(--accent-dark)}.tl-box.sum{background:#E8F0E8;color:#1B5E20;border:1.5px solid #1B5E20}
+.tl-val{font-family:var(--font-mono);font-size:.78rem;font-weight:700}
+.tl-val.endo{color:#B71C1C}.tl-val.exo{color:#1B5E20}.tl-val.unk{color:var(--accent-dark)}.tl-val.sum{color:#1B5E20}
+.tl-arrow{color:var(--ink-faint);font-weight:700}
+.own-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:10px 0}
+.own-grid label{display:flex;flex-direction:column;gap:6px;font-size:.85rem;font-weight:600}
+.own-grid select{padding:9px;border-radius:8px;border:1.5px solid var(--border);font-size:.9rem}
+.own-card{border-style:dashed}
+@media (max-width:640px){.own-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -362,7 +384,7 @@ footer.credit strong{color:var(--ink-soft); font-weight:600;}
    - ΔHf del resto se obtiene cerrando el ciclo (ley de Hess), por lo que
      puede diferir unos kJ/mol de las tablas termodinámicas.
    ========================================================= */
-const SUP = {1:'⁺',2:'²⁺'}, SUPN = {1:'⁻',2:'²⁻'};
+const SUP = {1:'⁺',2:'²⁺',3:'³⁺'}, SUPN = {1:'⁻',2:'²⁻'};
 const SUB2 = '₂';
 
 const COMPOUNDS = [
@@ -392,7 +414,7 @@ const COMPOUNDS = [
 
 /* Preguntas de razonamiento (punto 7) */
 const THINK = {
- nacl:{q:'¿Por qué el NaCl (777 kJ/mol; 801 °C) tiene menor energía reticular y menor punto de fusión que el MgO (3890 kJ/mol; 2800 °C)?',
+ nacl:{q:'¿Por qué el NaCl (787 kJ/mol; 801 °C) tiene menor energía reticular y menor punto de fusión que el MgO (3890 kJ/mol; 2800 °C)?',
   o:['Porque Mg²⁺ y O²⁻ tienen mayor carga y menor radio, y la atracción electrostática entre ellos es mucho mayor','Porque el MgO tiene más átomos por fórmula','Porque el sodio es más electronegativo que el magnesio','Porque el NaCl es un compuesto covalente'],c:0,
   e:'La energía reticular aumenta con el producto de las cargas (2·2 = 4 frente a 1·1 = 1) y al disminuir la distancia entre iones. Más energía reticular → mayor punto de fusión y mayor dureza.'},
  lif:{q:'Compara LiF y NaF. ¿Cuál tiene mayor energía reticular?',
@@ -400,8 +422,8 @@ const THINK = {
   e:'Ambos cationes tienen carga +1, pero Li⁺ tiene menor radio: menor distancia interiónica → mayor atracción → mayor energía reticular (tabla: 1031 frente a 915 kJ/mol).'},
  naf:{q:'Ordena NaF, NaCl, NaBr y NaI de mayor a menor energía reticular.',
   o:['NaF > NaCl > NaBr > NaI','NaI > NaBr > NaCl > NaF','NaCl > NaF > NaBr > NaI','Todas iguales: el catión es el mismo'],c:0,
-  e:'El catión y las cargas son los mismos; el radio del anión crece de F⁻ a I⁻, la distancia aumenta y la energía reticular disminuye (915, 777, 740, 693 kJ/mol).'},
- kcl:{q:'El KCl (708 kJ/mol) tiene menor energía reticular que el NaCl (777 kJ/mol). ¿Por qué?',
+  e:'El catión y las cargas son los mismos; el radio del anión crece de F⁻ a I⁻, la distancia aumenta y la energía reticular disminuye (915, 787, 740, 693 kJ/mol).'},
+ kcl:{q:'El KCl (708 kJ/mol) tiene menor energía reticular que el NaCl (787 kJ/mol). ¿Por qué?',
   o:['Porque K⁺ tiene mayor radio que Na⁺','Porque K⁺ tiene mayor carga que Na⁺','Porque el cloro es menos electronegativo en el KCl','Porque el KCl no forma red cristalina'],c:0,
   e:'Mismas cargas; K⁺ es mayor que Na⁺ (una capa más), la distancia entre iones aumenta y la atracción disminuye.'},
  nabr:{q:'¿Por qué en el ciclo del NaBr aparece una etapa de vaporización además de la disociación?',
@@ -427,7 +449,11 @@ const THINK = {
   e:'Mismas cargas (2+ y 2−); el menor radio del Mg²⁺ hace que la energía reticular del MgO sea mayor y, con ella, su punto de fusión.'}
 };
 
-const SHORT = {sub:'S', dis:'D', atom:'D*', ion1:'I₁', ion2:'I₂', ea1:'AE₁', ea2:'AE₂', ret:'Eᵣ'};
+const SHORT = {sub:'S', dis:'D', atom:'D*', ion1:'I₁', ion2:'I₂', ion3:'I₃', ea1:'AE₁', ea2:'AE₂', ret:'Eᵣ'};
+const TL = {sub:'Sublimación', dis:'Disociación', atom:'Atomización', ion1:'1.ª ionización', ion2:'2.ª ionización', ion3:'3.ª ionización', ea1:'1.ª afinidad', ea2:'2.ª afinidad', ret:'Energía reticular'};
+function coefTxt(v){return v===1?'':fracLabel(v)+' ';}
+function elems(c){return `${coefTxt(c.coefs.metal)}${c.M}(s) + ${coefTxt(c.coefs.nonmetal)}${x2(c)}(${c.xState})`;}
+function multTxt(v){return Math.abs(v-0.5)<0.001?'½':fracLabel(v);}
 const DIFF_LABEL = {facil:'Fácil', medio:'Medio', dificil:'Difícil'};
 const DISTRACTOR_POOL = ['Entalpía de hidratación del ion','Entalpía de disolución en agua','Entalpía de fusión del sólido','Energía de enlace metálico','Calor específico del compuesto','Entalpía de vaporización del compuesto fundido'];
 
@@ -441,6 +467,7 @@ function label(c,k){
     case 'atom': return c.xState==='l' ? `Vaporización + disociación del ${x2(c)} (por mol de ${x2(c)})` : `Sublimación + disociación del ${x2(c)} (por mol de ${x2(c)})`;
     case 'ion1': return `1.ª energía de ionización del ${c.M}`;
     case 'ion2': return `2.ª energía de ionización del ${c.M}`;
+    case 'ion3': return `3.ª energía de ionización del ${c.M}`;
     case 'ea1': return `1.ª afinidad electrónica del ${c.X}`;
     case 'ea2': return `2.ª afinidad electrónica del ${c.X}`;
     case 'ret': return `Energía reticular del ${c.fh}`;
@@ -453,9 +480,10 @@ function equation(c,k){
     case 'atom': return `${x2(c)}(${c.xState}) → 2 ${c.X}(g)`;
     case 'ion1': return `${c.M}(g) → ${c.M}⁺(g) + e⁻`;
     case 'ion2': return `${c.M}⁺(g) → ${c.M}²⁺(g) + e⁻`;
+    case 'ion3': return `${c.M}²⁺(g) → ${c.M}³⁺(g) + e⁻`;
     case 'ea1': return `${c.X}(g) + e⁻ → ${c.X}⁻(g)`;
     case 'ea2': return `${c.X}⁻(g) + e⁻ → ${c.X}²⁻(g)`;
-    case 'ret': return `${cat(c)}(g) + ${c.nA>1?c.nA+' ':''}${an(c)}(g) → ${c.fh}(s)`;
+    case 'ret': return `${(c.nC||1)>1?c.nC+' ':''}${cat(c)}(g) + ${c.nA>1?c.nA+' ':''}${an(c)}(g) → ${c.fh}(s)`;
   }
 }
 
@@ -519,8 +547,8 @@ function renderLibrary(){
     <p>Elige un compuesto iónico. Para cada uno identificarás los iones, ajustarás la reacción de formación, construirás su ciclo de Born–Haber y calcularás una de sus energías con la ley de Hess.</p>
     <div class="notice"><b>⚠️ Ojo con el signo de la energía reticular.</b> Puede definirse en los dos sentidos:
       <div class="sign-row">
-        <div>Ruptura de la red (definición del tema):<br>NaCl(s) → Na⁺(g) + Cl⁻(g) &nbsp; ΔH<sub>red</sub> = <b>+777</b></div>
-        <div>Formación de la red (la que entra en el ciclo):<br>Na⁺(g) + Cl⁻(g) → NaCl(s) &nbsp; E<sub>r</sub> = <b>−777</b></div>
+        <div>Ruptura de la red (definición del tema):<br>NaCl(s) → Na⁺(g) + Cl⁻(g) &nbsp; ΔH<sub>red</sub> = <b>+787</b></div>
+        <div>Formación de la red (la que entra en el ciclo):<br>Na⁺(g) + Cl⁻(g) → NaCl(s) &nbsp; E<sub>r</sub> = <b>−787</b></div>
       </div>
       En el ciclo de Born–Haber se usa siempre el proceso de <b>formación</b> del cristal, por eso E<sub>r</sub> es negativa.</div>
     <details class="concepts">
@@ -534,11 +562,6 @@ function renderLibrary(){
         <div class="concept-item"><b>Entalpía de formación (ΔH<sub>f</sub>)</b>Elementos en estado estándar → 1 mol de compuesto.</div>
       </div>
     </details>
-    <div class="section-label">Ejercicios de la unidad</div>
-    <div class="quick-row">
-      <button class="quick-btn" data-quick="nacl:dis">📘 Ejercicio 2 · NaCl: calcula la disociación del Cl₂</button>
-      <button class="quick-btn" data-quick="lif:ret">📘 Cuestión 4 · LiF: calcula la energía reticular</button>
-    </div>
     <div class="section-label">Biblioteca de compuestos</div>
   </section>
   <div class="lib-grid" id="libGrid"></div>`;
@@ -552,14 +575,17 @@ function renderLibrary(){
     card.addEventListener('click',()=>startCompound(c.id));
     grid.appendChild(card);
   });
-  document.querySelectorAll('[data-quick]').forEach(b=>b.addEventListener('click',()=>{
-    const [id,k]=b.dataset.quick.split(':'); startCompound(id,k);
-  }));
+  const own=el(`<button class="compound-card own-card"><div class="cc-top"><span class="cc-formula">✏️ ¿…?</span><span class="diff-badge diff-medio">Libre</span></div>
+      <div class="cc-name">Tu propio compuesto iónico</div><div class="cc-ions" style="font-size:.8rem;color:var(--ink-soft)">Escribe los iones y los datos de tu enunciado</div>
+      <div class="cc-cta">Crear →</div></button>`);
+  own.addEventListener('click',renderCustomForm);
+  grid.appendChild(own);
 }
 
 function startCompound(id,presetUnknown){
-  const c=COMPOUNDS.find(x=>x.id===id);
+  const c=typeof id==='object'?id:COMPOUNDS.find(x=>x.id===id);
   state={c, step:1, slots:slotsOf(c), form:c.form, unknownMode:presetUnknown||'random', unknown:null, tries:0};
+  state.unknown = c.custom ? c.customUnknown : chooseUnknown();
   renderStep1();
 }
 
@@ -590,7 +616,7 @@ function renderStep1(){
     }else{
       fb.className='feedback show bad';
       let m=[];
-      if(!okC) m.push(`Revisa el catión: ¿en qué grupo está el ${c.M}? Los metales del grupo 1 pierden 1 e⁻ y los del grupo 2 pierden 2 e⁻ (carga positiva).`);
+      if(!okC) m.push(`Revisa el catión: ¿en qué grupo está el ${c.M}? Los metales del grupo 1 pierden 1 e⁻, los del grupo 2 pierden 2 e⁻ y los del grupo 13 pierden 3 e⁻ (carga positiva).`);
       if(!okA) m.push(`Revisa el anión: los no metales del grupo 17 ganan 1 e⁻ y los del grupo 16 ganan 2 e⁻ (carga negativa).`);
       fb.innerHTML=m.join('<br>');
     }
@@ -638,50 +664,92 @@ function renderStep2(){
    ========================================================= */
 function renderStep3(){
   state.step=3; renderStepsNav();
-  const c=state.c, S=state.slots;
+  const c=state.c, S=state.slots, U=state.unknown;
+  const valOf=j=>U===j?'?':sgn(S[j].value);
   const pool=shuffle(S.map((s,j)=>({v:'s'+j,l:label(c,s.key)})).concat(pickN(DISTRACTOR_POOL,3).map((l,k)=>({v:'d'+k,l}))));
   const rows=S.map((_,i)=>`<div class="slot-row">
       <div class="slot-index">${i+1}</div>
       <select class="slot-select" data-idx="${i}"><option value="">Selecciona la energía…</option>${pool.map(o=>`<option value="${o.v}">${o.l}</option>`).join('')}</select>
-      <div class="slot-mult">× <input class="mult-input" data-idx="${i}" placeholder="ej: 1/2"></div>
+      <div class="slot-val" id="val-${i}" title="Valor del dato (kJ/mol)">—</div>
+      <div class="slot-mult">× <input class="mult-input" data-idx="${i}" placeholder="½, 1, 2…" aria-label="Multiplicador"></div>
+      <div class="slot-mult">= <input class="prod-input" data-idx="${i}" placeholder="kJ/mol" aria-label="Valor multiplicado"></div>
       <div class="slot-status idle" id="st-${i}">&nbsp;</div>
       <div class="slot-eq" id="eq-${i}"></div></div>`).join('');
+  const data=shuffle(S.map((s,j)=>({l:label(c,s.key),v:valOf(j)})));
+  data.push({l:`Entalpía de formación del ${c.fh}`,v:U==='form'?'?':sgn(state.form)});
   document.getElementById('app').innerHTML=`<div class="card">${head('Paso 3 de 4')}
-    <p style="color:var(--ink-soft);font-size:.92rem">El camino directo es la entalpía de formación de 1 mol de compuesto. Completa el <b>camino indirecto</b>: elige las energías que intervienen (en cualquier orden, sin repetir) y el número por el que hay que multiplicar cada una según la estequiometría. Al comprobar verás la ecuación de cada etapa.</p>
+    <p style="color:var(--ink-soft);font-size:.92rem">El camino directo es la entalpía de formación de 1 mol de compuesto. Completa el <b>camino indirecto</b>: elige cada energía (en cualquier orden, sin repetir); al elegirla verás su valor. Después escribe <b>por cuánto hay que multiplicarla</b> y el <b>valor ya multiplicado</b>. Si el dato es la incógnita (?), deja vacío el valor multiplicado.</p>
     <div class="cycle-wrap">
       <div class="cycle-top">
-        <div class="cycle-node">${c.M}(s) + ${c.coefs.nonmetal!==1?fracLabel(c.coefs.nonmetal)+' ':''}${x2(c)}(${c.xState})</div>
+        <div class="cycle-node">${elems(c)}</div>
         <div class="direct-path"><span class="cycle-arrow-label">ΔH°<sub>f</sub></span><span class="cycle-arrow">→</span></div>
         <div class="cycle-node">${c.fh}(s)</div>
       </div>
       <div class="slots-panel">${rows}</div>
     </div>
+    <div class="data-panel"><div class="dp-title">📋 Datos del problema (kJ/mol)</div>
+      <div class="dp-grid">${data.map(d=>`<div class="dp-item"><span>${d.l}</span><b>${d.v}</b></div>`).join('')}</div>
+      <p class="data-note" style="margin-top:6px">La disociación se da por mol de ${x2(c)}; la afinidad electrónica y la ionización, por átomo o ion.</p></div>
+    <details class="concepts" style="margin-top:14px"><summary>¿Por cuánto multiplico? Mira la fórmula</summary>
+      <div style="padding:10px 4px;font-size:.88rem;line-height:1.55">Escribe la reacción de formación de 1 mol de compuesto: <b>${elems(c)} → ${c.fh}(s)</b>.<br>
+      • El coeficiente del ${x2(c)} multiplica a la <b>disociación</b> (× ½ si hay un átomo de ${c.X} en la fórmula; × 1 si hay dos).<br>
+      • Se suma <b>una afinidad por cada átomo</b> de no metal de la fórmula.<br>
+      • La <b>carga del catión</b> dice cuántas ionizaciones hay (I₁, I₁ + I₂…) y la <b>carga del anión</b>, cuántas afinidades sucesivas.<br>
+      • Si hay más de un átomo de metal en la fórmula, su sublimación e ionizaciones se multiplican por ese número.</div></details>
     <div class="action-row"><button class="btn btn-primary" id="chk">Comprobar esquema</button>
       <button class="btn btn-ghost" id="next" style="display:none">Continuar al cálculo →</button></div>
     <div class="feedback" id="fb"></div></div>`;
   bindBack();
+  document.querySelectorAll('.slot-select').forEach(sel=>sel.addEventListener('change',()=>{
+    const i=sel.dataset.idx, v=sel.value, box=document.getElementById('val-'+i);
+    box.textContent = /^s\d+$/.test(v) ? valOf(+v.slice(1)) : (v?'no es un dato del ciclo':'—');
+    box.classList.toggle('na', !!v && !/^s\d+$/.test(v));
+  }));
   document.getElementById('chk').addEventListener('click',()=>{
     const used={}; S.forEach((_,i)=>{const v=document.querySelector(`.slot-select[data-idx="${i}"]`).value;used[v]=(used[v]||0)+1;});
-    let all=true;
+    let all=true, prodBad=false, multBad=false;
     S.forEach((_,i)=>{
       const v=document.querySelector(`.slot-select[data-idx="${i}"]`).value;
-      const mult=parseFrac(document.querySelector(`.mult-input[data-idx="${i}"]`).value);
+      const mult=parseFrac(document.querySelector(`.mult-input[data-idx="${i}"]`).value.replace('½','1/2'));
+      const prodRaw=document.querySelector(`.prod-input[data-idx="${i}"]`).value.trim();
       const st=document.getElementById('st-'+i), eq=document.getElementById('eq-'+i);
       const typeOk=/^s\d+$/.test(v)&&used[v]===1;
-      const slot=typeOk?S[+v.slice(1)]:null;
-      const ok=typeOk&&fracsMatch(mult,slot.multiplier);
+      const j=typeOk?+v.slice(1):-1, slot=typeOk?S[j]:null;
+      const mOk=typeOk&&fracsMatch(mult,slot.multiplier);
+      let pOk=true;
+      if(typeOk&&j!==U){const pv=parseNum(prodRaw); pOk=!isNaN(pv)&&Math.abs(pv-slot.value*slot.multiplier)<=1;}
+      if(typeOk&&j===U) pOk=(prodRaw===''||prodRaw==='?');
+      const ok=mOk&&pOk;
+      if(typeOk&&!mOk)multBad=true; if(mOk&&!pOk)prodBad=true;
       st.className='slot-status '+(ok?'ok':'bad'); st.innerHTML=ok?'✓':'✗';
-      if(typeOk){eq.textContent=(slot.multiplier!==1?fracLabel(slot.multiplier)+' × ':'')+'['+equation(c,slot.key)+']';eq.classList.add('show');}
+      if(typeOk){eq.textContent=(slot.multiplier!==1?multTxt(slot.multiplier)+' × ':'')+'['+equation(c,slot.key)+']';eq.classList.add('show');}
       else eq.classList.remove('show');
       if(!ok)all=false;
     });
     const fb=document.getElementById('fb');
-    if(all){fb.className='feedback show ok';fb.innerHTML='Esquema correcto: has identificado todas las etapas del ciclo y sus coeficientes.';document.getElementById('next').style.display='inline-block';}
-    else{fb.className='feedback show bad';fb.innerHTML='Algunas filas no son correctas (✗). Revisa el tipo de energía (sin repetir) y cuántos átomos, iones o electrones intervienen según la fórmula. Si la energía es correcta verás su ecuación: úsala para deducir el coeficiente.';}
+    if(all){fb.className='feedback show ok';fb.innerHTML='Esquema correcto: has identificado todas las etapas, por cuánto se multiplica cada una y su valor multiplicado.';document.getElementById('next').style.display='inline-block';}
+    else{fb.className='feedback show bad';
+      let m=['Algunas filas no son correctas (✗).'];
+      m.push('Revisa que cada energía sea del ciclo y no esté repetida.');
+      if(multBad) m.push('Algún multiplicador no es correcto: abre «¿Por cuánto multiplico? Mira la fórmula».');
+      if(prodBad) m.push('Algún valor multiplicado no cuadra: multiplica el dato por su coeficiente y respeta el signo.');
+      fb.innerHTML=m.join(' ');}
   });
-  document.getElementById('next').addEventListener('click',()=>renderStep4());
+  document.getElementById('next').addEventListener('click',()=>renderStep4(true));
 }
-
+/* =========================================================
+   LÍNEA DE TIEMPO DEL CICLO
+   ========================================================= */
+function timelineHTML(c,S,form,U){
+  const items=S.map((s,i)=>{
+    const unk=U===i, v=s.value*s.multiplier, cls=unk?'unk':(v>0?'endo':'exo');
+    const calc=unk?'?':(s.multiplier!==1?`${multTxt(s.multiplier)} · (${sgn(s.value)}) = ${sgn(round1(v))}`:sgn(s.value));
+    return `<div class="tl-item"><div class="tl-eq">${s.multiplier!==1?multTxt(s.multiplier)+' × ':''}${equation(c,s.key)}</div>
+      <div class="tl-box ${cls}">${TL[s.key]}${s.multiplier!==1?` (× ${multTxt(s.multiplier)})`:''}</div>
+      <div class="tl-val ${cls}">${calc}</div></div>`;}).join('<div class="tl-arrow">→</div>');
+  return `<div class="timeline"><div class="tl-title">Línea de tiempo del ciclo: arriba lo que ocurre, abajo su valor ya multiplicado (kJ/mol)</div>
+    <div class="tl-row">${items}<div class="tl-arrow">=</div><div class="tl-item"><div class="tl-eq">${elems(c)} → ${c.fh}(s)</div><div class="tl-box sum">Σ = ΔH°f</div><div class="tl-val sum">${U==='form'?'?':sgn(form)}</div></div></div></div>`;
+}
 /* =========================================================
    DIAGRAMA DE NIVELES DE ENERGÍA
    ========================================================= */
@@ -700,7 +768,7 @@ function diagramSVG(c,slots,form,unknown){
   const col={endo:'#C8695D',exo:'#5C9276',unk:'#A97A3B',ink:'#223333',soft:'#8A9C9A'};
   // nivel cero y formación
   g+=`<line x1="20" y1="${y(0)}" x2="${W-10}" y2="${y(0)}" stroke="${col.soft}" stroke-dasharray="3 4" stroke-width="1"/>`;
-  g+=`<text x="22" y="${y(0)-8}" font-size="12" fill="${col.ink}" font-family="Inter,sans-serif">Elementos: ${c.M}(s) + ${c.coefs.nonmetal!==1?fracLabel(c.coefs.nonmetal)+' ':''}${x2(c)}(${c.xState})</text>`;
+  g+=`<text x="22" y="${y(0)-8}" font-size="12" fill="${col.ink}" font-family="Inter,sans-serif">Elementos: ${elems(c)}</text>`;
   const fUnk=unknown==='form';
   const fc=fUnk?col.unk:(fVal<0?col.exo:col.endo);
   g+=`<line x1="${W-40}" y1="${y(fVal)}" x2="${W-10}" y2="${y(fVal)}" stroke="${col.ink}" stroke-width="3"/>`;
@@ -747,16 +815,16 @@ function renderStep4(keepUnknown){
   state.tries=0;
   const U=state.unknown;
   const opts=[['random','Aleatoria']].concat(S.map(s=>[s.key,label(c,s.key)])).concat([['form','Entalpía de formación']]);
-  const rows=S.map((s,i)=>`<tr class="${U===i?'unknown-row':''}"><td class="label-cell">${label(c,s.key)}<span class="mult-tag">×${fracLabel(s.multiplier)}</span><span class="eq-cell">${equation(c,s.key)}</span></td>
+  const rows=S.map((s,i)=>`<tr class="${U===i?'unknown-row':''}"><td class="label-cell">${label(c,s.key)}<span class="mult-tag">×${multTxt(s.multiplier)}</span><span class="eq-cell">${equation(c,s.key)}</span></td>
      <td>${U===i?'?':sgn(s.value)+' kJ/mol'}</td></tr>`).join('')+
-    `<tr class="${U==='form'?'unknown-row':''}"><td class="label-cell">Entalpía de formación del ${c.fh}<span class="eq-cell">${c.M}(s) + ${c.coefs.nonmetal!==1?fracLabel(c.coefs.nonmetal)+' ':''}${x2(c)}(${c.xState}) → ${c.fh}(s)</span></td>
+    `<tr class="${U==='form'?'unknown-row':''}"><td class="label-cell">Entalpía de formación del ${c.fh}<span class="eq-cell">${elems(c)} → ${c.fh}(s)</span></td>
      <td>${U==='form'?'?':sgn(state.form)+' kJ/mol'}</td></tr>`;
   const customRows=S.map((s,i)=>`<div class="custom-row"><span>${label(c,s.key)} <span class="mult-tag">×${fracLabel(s.multiplier)}</span></span>
      <input type="text" data-cv="${i}" value="${s.value}"><label class="rad"><input type="radio" name="cu" value="${i}" ${U===i?'checked':''}> incógnita</label></div>`).join('')+
     `<div class="custom-row"><span>Entalpía de formación</span><input type="text" data-cv="form" value="${state.form}"><label class="rad"><input type="radio" name="cu" value="form" ${U==='form'?'checked':''}> incógnita</label></div>`;
   document.getElementById('app').innerHTML=`<div class="card">${head('Paso 4 de 4')}
     <p style="color:var(--ink-soft);font-size:.92rem">Ley de Hess: la suma de las energías del camino indirecto (cada una multiplicada por su coeficiente) es igual a la entalpía de formación. Calcula el valor marcado con <b>?</b>.</p>
-    <div class="toolbar">
+    <div class="toolbar" ${c.custom?'style="display:none"':''}>
       <label for="um" style="font-size:.85rem;font-weight:600">Incógnita:</label>
       <select id="um">${opts.map(([v,l])=>`<option value="${v}" ${state.unknownMode===v?'selected':''}>${l}</option>`).join('')}</select>
       <button class="btn btn-ghost" id="customBtn" style="padding:8px 14px">✏️ Usar datos de mi ejercicio</button>
@@ -767,6 +835,7 @@ function renderStep4(keepUnknown){
       <div class="action-row"><button class="btn btn-primary" id="applyCustom">Usar estos datos</button><button class="btn btn-ghost" id="resetData">Restaurar datos del simulador</button></div>
       <div class="feedback" id="fbc"></div>
     </div>
+    ${timelineHTML(c,S,state.form,U)}
     ${diagramSVG(c,S,state.form,U)}
     <table class="calc-table"><thead><tr><th>Etapa</th><th>Valor</th></tr></thead><tbody>${rows}</tbody></table>
     ${U!=='form'&&S[U].key==='ret'?`<p class="data-note">Recuerda: en el ciclo, E<sub>r</sub> corresponde a la formación del cristal desde los iones gaseosos.</p>`:''}
@@ -837,13 +906,13 @@ function checkStep4(){
    ========================================================= */
 function renderResult(){
   const c=state.c, t=THINK[c.id];
-  const order=shuffle(t.o.map((o,i)=>({o,i})));
+  const order=t?shuffle(t.o.map((o,i)=>({o,i}))):[];
   document.getElementById('app').innerHTML=`<div class="card result-hero"><div class="big-check">🌟</div>
     <h2>Ciclo de ${c.fh} completado</h2>
-    <p>Has identificado los iones, ajustado la reacción de formación, construido el ciclo de Born–Haber y calculado una de sus energías para el ${c.name.toLowerCase()}.</p>
-    <div class="think"><h3>🧠 Para pensar</h3><p>${t.q}</p>
+    <p>Has identificado los iones, ajustado la reacción de formación, construido el ciclo de Born–Haber y calculado una de sus energías para el ${c.custom?c.fh:c.name.toLowerCase()}.</p>
+    ${t?`<div class="think"><h3>🧠 Para pensar</h3><p>${t.q}</p>
       ${order.map(x=>`<button class="opt" data-i="${x.i}">${x.o}</button>`).join('')}
-      <div class="feedback" id="fbt"></div></div>
+      <div class="feedback" id="fbt"></div></div>`:''}
     <div class="result-actions"><button class="btn btn-ghost" id="retry">Repetir este compuesto</button><button class="btn btn-primary" id="lib">Elegir otro compuesto</button></div></div>`;
   document.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{
     const fb=document.getElementById('fbt'), ok=+b.dataset.i===t.c;
@@ -852,11 +921,63 @@ function renderResult(){
     fb.className='feedback show '+(ok?'ok':'bad');
     fb.innerHTML=ok?`<b>Correcto.</b> ${t.e}`:'No es esa. Piensa en la carga y el tamaño de los iones, y vuelve a intentarlo.';
   }));
-  document.getElementById('retry').addEventListener('click',()=>startCompound(c.id));
+  document.getElementById('retry').addEventListener('click',()=>c.custom?renderCustomForm():startCompound(c.id));
   document.getElementById('lib').addEventListener('click',renderLibrary);
   renderStepsNav(true);
 }
 
+/* =========================================================
+   COMPUESTO PROPIO
+   ========================================================= */
+const NONMETALS={F:{st:'g',za:1},Cl:{st:'g',za:1},Br:{st:'l',za:1},I:{st:'s',za:1},O:{st:'g',za:2}};
+function gcd(a,b){return b?gcd(b,a%b):a;}
+function subNum(n){return n>1?String(n).split('').map(d=>'₀₁₂₃₄₅₆₇₈₉'[d]).join(''):'';}
+function customKeys(zc,X){const za=NONMETALS[X].za;
+  const k=['sub', NONMETALS[X].st==='g'?'dis':'atom']; for(let i=1;i<=zc;i++)k.push('ion'+i);
+  k.push('ea1'); if(za===2)k.push('ea2'); k.push('ret'); return k;}
+function renderCustomForm(){
+  state={c:null}; renderStepsNav();
+  document.getElementById('app').innerHTML=`<div class="card"><div class="work-head"><div class="work-title"><h2>Tu propio compuesto</h2><span>Elige los iones y escribe los datos de tu enunciado</span></div>
+    <button class="link-btn" data-back>← Biblioteca</button></div>
+    <div class="own-grid">
+      <label>Símbolo del metal<input id="om" class="answer-input" placeholder="ej: K" maxlength="2"></label>
+      <label>Carga del catión<select id="oc"><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option></select></label>
+      <label>No metal<select id="ox">${Object.keys(NONMETALS).map(x=>`<option>${x}</option>`).join('')}</select></label>
+    </div>
+    <p class="data-note" id="ofml"></p>
+    <div id="odata"></div>
+    <p class="data-note">Escribe los datos en kJ/mol con su signo, tal como vienen en el enunciado (la disociación, por mol de X₂; ionizaciones y afinidades, por átomo). <b>Deja vacía solo la incógnita.</b></p>
+    <div class="action-row"><button class="btn btn-primary" id="ogo">Construir el ciclo →</button></div>
+    <div class="feedback" id="ofb"></div></div>`;
+  bindBack();
+  const draw=()=>{
+    const M=(document.getElementById('om').value.trim()||'M'), zc=+document.getElementById('oc').value, X=document.getElementById('ox').value;
+    const za=NONMETALS[X].za, g=gcd(zc,za), a=za/g, b=zc/g;
+    const fake={M,X,zc,za,nA:b,nC:a,fh:M+subNum(a)+X+subNum(b),xState:NONMETALS[X].st};
+    document.getElementById('ofml').innerHTML=`Fórmula: <b>${fake.fh}</b> · iones ${M}${SUP[zc]} y ${X}${SUPN[za]}`;
+    const sig=zc+X, od=document.getElementById('odata');
+    if(od.dataset.sig===sig){ od.querySelectorAll('[data-ok]').forEach(inp=>{const k=inp.dataset.ok; inp.previousElementSibling.textContent=k==='form'?'Entalpía de formación del '+fake.fh:label(fake,k);}); return; }
+    od.dataset.sig=sig;
+    const prev={}; document.querySelectorAll('[data-ok]').forEach(i=>prev[i.dataset.ok]=i.value);
+    od.innerHTML=customKeys(zc,X).concat(['form']).map(k=>`<div class="custom-row" style="grid-template-columns:1fr 130px"><span>${k==='form'?'Entalpía de formación del '+fake.fh:label(fake,k)}</span><input type="text" data-ok="${k}" value="${prev[k]||''}" placeholder="kJ/mol"></div>`).join('');
+  };
+  ['om','oc','ox'].forEach(id=>{const e=document.getElementById(id);e.addEventListener('input',draw);e.addEventListener('change',draw);}); draw();
+  document.getElementById('ogo').addEventListener('click',()=>{
+    const fb=document.getElementById('ofb');
+    const M=document.getElementById('om').value.trim(), zc=+document.getElementById('oc').value, X=document.getElementById('ox').value;
+    if(!/^[A-Z][a-z]?$/.test(M)){fb.className='feedback show bad';fb.innerHTML='Escribe el símbolo del metal (por ejemplo K, Ba o Al).';return;}
+    const za=NONMETALS[X].za, g=gcd(zc,za), a=za/g, b=zc/g;
+    const keys=customKeys(zc,X); let blanks=[], vals={}, bad=false;
+    keys.concat(['form']).forEach(k=>{const r=document.querySelector(`[data-ok="${k}"]`).value.trim(); if(r===''||r==='?'){blanks.push(k);return;} const v=parseNum(r); if(isNaN(v))bad=true; vals[k]=v;});
+    if(bad){fb.className='feedback show bad';fb.innerHTML='Hay algún dato que no es un número.';return;}
+    if(blanks.length!==1){fb.className='feedback show bad';fb.innerHTML=`Deja vacía <b>exactamente una</b> casilla: la incógnita (ahora hay ${blanks.length}).`;return;}
+    const mult=k=>(k==='sub'||k.startsWith('ion'))?a:(k==='dis'||k==='atom')?b/2:k.startsWith('ea')?b:1;
+    const slots=keys.map(k=>[k,k===blanks[0]?NaN:vals[k],mult(k)]);
+    const c={id:'custom',custom:true,f:M+X,fh:M+subNum(a)+X+subNum(b),name:'Tu compuesto',M,X,zc,za,nA:b,nC:a,xState:NONMETALS[X].st,
+      coefs:{metal:a,nonmetal:b/2},slots,form:blanks[0]==='form'?NaN:vals.form,customUnknown:blanks[0]==='form'?'form':keys.indexOf(blanks[0])};
+    startCompound(c);
+  });
+}
 renderLibrary();
 </script>
 </body>

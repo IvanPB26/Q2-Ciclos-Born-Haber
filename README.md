@@ -13,12 +13,13 @@ El alumno construye paso a paso el ciclo de formación de un cristal iónico y c
 **Recorrido en 4 pasos**
 1. **Iones:** carga del catión y del anión (valencia iónica).
 2. **Ajustar:** reacción de formación de 1 mol de compuesto desde los elementos en su estado estándar (Br₂ líquido, I₂ sólido).
-3. **Esquema:** etapas del ciclo (sublimación, disociación, ionización, afinidad electrónica y energía reticular), su coeficiente y su ecuación.
-4. **Cálculo:** ley de Hess, con diagrama de niveles de energía.
+3. **Esquema:** etapas del ciclo (sublimación, disociación, ionización, afinidad electrónica y energía reticular). Al elegir cada energía aparece su valor; el alumno escribe por cuánto se multiplica (× ½, × 1, × 2…) y el valor ya multiplicado.
+4. **Cálculo:** ley de Hess, con línea de tiempo del ciclo (proceso arriba, valor multiplicado abajo) y diagrama de niveles de energía.
 
 **Incluye**
 - 11 compuestos en tres niveles: NaCl, LiF, NaF, KCl, NaBr, KI, MgCl₂, CaF₂, CaCl₂, MgO y CaO
-- Accesos directos al ejercicio 2 (NaCl) y a la cuestión 4 (LiF) de la unidad
+- **Tu propio compuesto:** el alumno elige el metal (carga 1+, 2+ o 3+) y el no metal (F, Cl, Br, I, O), escribe los datos de su enunciado y deja vacía la incógnita
+- Panel de datos del problema y ayuda «¿Por cuánto multiplico? Mira la fórmula»
 - Incógnita a elegir: cualquier etapa del ciclo o la entalpía de formación
 - Modo **«Usar datos de mi ejercicio»** para resolver cualquier enunciado
 - Aviso sobre el convenio de signos de la energía reticular (ruptura de la red +, formación −)

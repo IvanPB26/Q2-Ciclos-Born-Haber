@@ -346,8 +346,11 @@ footer.credit strong{color:var(--ink-soft); font-weight:600;}
 .own-grid select{padding:9px;border-radius:8px;border:1.5px solid var(--border);font-size:.9rem}
 .own-card{border-style:dashed}
 @media (max-width:640px){.own-grid{grid-template-columns:1fr}}
-.brandbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 2px;margin-bottom:6px;border-bottom:1px solid var(--border);font-size:15px}
-.brandbar span{font-weight:700;color:var(--ink)}
+.brandbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 2px 4px;font-size:14px}
+.brand-pill{display:flex;align-items:center;gap:12px;padding:7px 20px 7px 7px;border-radius:999px;background:var(--surface);border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.04);font-weight:600;color:var(--ink)}
+.brand-pill>span:last-child{white-space:nowrap}
+@media (max-width:640px){.brand-pill{font-size:13px;padding-right:14px}}
+.brand-ico{width:40px;height:40px;border-radius:50%;background:var(--primary-dark);color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
 .brandbar a{color:var(--accent-dark);font-weight:600;text-decoration:none}
 .brandbar a:hover{text-decoration:underline}
 .credit.credit-right{text-align:right !important}
@@ -357,7 +360,8 @@ footer.credit strong{color:var(--ink-soft); font-weight:600;}
 <body>
 <div class="lattice-bg"></div>
 <div class="shell">
-  <div class="brandbar"><span>Aprende Química con Profesor Iván PB-IA</span><a href="https://ivanpb26.github.io/Simuladores-educativos/">← Todos los simuladores</a></div>
+  <div class="brandbar"><a href="https://ivanpb26.github.io/Simuladores-educativos/">← Todos los simuladores</a>
+    <div class="brand-pill"><span class="brand-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.52-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.52 4.52 9.87 6.54 11.9 4.5Z"/><path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z"/></svg></span><span>Aprende Química con Profesor Iván PB-IA</span></div></div>
 
   <header class="top">
     <div class="brand">

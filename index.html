@@ -346,11 +346,18 @@ footer.credit strong{color:var(--ink-soft); font-weight:600;}
 .own-grid select{padding:9px;border-radius:8px;border:1.5px solid var(--border);font-size:.9rem}
 .own-card{border-style:dashed}
 @media (max-width:640px){.own-grid{grid-template-columns:1fr}}
+.brandbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 2px;margin-bottom:6px;border-bottom:1px solid var(--border);font-size:15px}
+.brandbar span{font-weight:700;color:var(--ink)}
+.brandbar a{color:var(--accent-dark);font-weight:600;text-decoration:none}
+.brandbar a:hover{text-decoration:underline}
+.credit.credit-right{text-align:right !important}
+.credit-right p{margin:0}
 </style>
 </head>
 <body>
 <div class="lattice-bg"></div>
 <div class="shell">
+  <div class="brandbar"><span>Aprende Química con Profesor Iván PB-IA</span><a href="https://ivanpb26.github.io/Simuladores-educativos/">← Todos los simuladores</a></div>
 
   <header class="top">
     <div class="brand">
@@ -363,7 +370,7 @@ footer.credit strong{color:var(--ink-soft); font-weight:600;}
       </div>
       <div>
         <h1>Simulador de Ciclos de Born&#8211;Haber</h1>
-        <p>Aprende Química con Profesor Iván PB-IA · 2.º Bachillerato</p>
+        <p>2.º Bachillerato · Química</p>
       </div>
     </div>
     <nav class="steps-nav" id="stepsNav" aria-label="Progreso"></nav>
@@ -371,7 +378,7 @@ footer.credit strong{color:var(--ink-soft); font-weight:600;}
 
   <main id="app"></main>
 
-  <footer class="credit">Bachillerato - Química · Desarrollado por <strong>Profesor Iván PB-IA</strong><br><span style="font-size:.75rem">Basado en una herramienta original de Francisco Collados</span></footer>
+  <footer class="credit credit-right"><p>Simulador de Ciclos de Born-Haber</p><p>Bachillerato - Química<br>Desarrollado por <strong>Profesor Iván PB-IA</strong></p></footer>
 </div>
 
 <script>
